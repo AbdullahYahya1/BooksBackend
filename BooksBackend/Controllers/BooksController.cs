@@ -80,5 +80,36 @@ namespace BooksBackend.Controllers
             var response = await _bookService.DeleteGenreAsync(genreId);
             return Ok(response);
         }
+        // add BookFavorit
+
+        [HttpPost("{bookId}/favorite")]
+        [Authorize]
+        public async Task<IActionResult> AddToFavorites(int bookId)
+        {
+            var response = await _bookService.AddToFavoritesAsync(bookId);
+            return Ok(response);
+        }
+        [HttpDelete("{bookId}/favorite")]
+        [Authorize]
+        public async Task<IActionResult> RemoveFromFavorites(int bookId)
+        {
+            var response = await _bookService.RemoveFromFavoritesAsync(bookId);
+            return Ok(response);
+        }
+        [HttpGet("favorites")]
+        [Authorize]
+        public async Task<IActionResult> GetFavoriteBooks()
+        {
+            var response = await _bookService.GetFavoriteBooksAsync();
+            return Ok(response);
+        }
+
+        [HttpGet("popular")]
+        public async Task<IActionResult> GetMostPopularBooks()
+        {
+            var response = await _bookService.GetMostPopularBooks();
+            return Ok(response);
+        }
+
     }
 }

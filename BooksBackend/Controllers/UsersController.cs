@@ -18,9 +18,8 @@ namespace BooksBackend.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetProfile() {
-            var user =await _userService.GetCurrentUser();
+        public async Task<IActionResult> GetProfile([FromQuery] int? UserId) {
+            var user =await _userService.GetCurrentUser(UserId);
             return Ok(user); 
         }
 
@@ -57,6 +56,18 @@ namespace BooksBackend.Controllers
         {
             var response = await _followService.GetFollowingActivityAsync();
             return Ok(response);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> GetUsersByEmailOrName([FromQuery] string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return BadRequest("Search query cannot be empty.");
+            }
+
+            var users = await _userService.GetUsersByEmailOrName(query);
+            return Ok(users);
         }
     }
 }

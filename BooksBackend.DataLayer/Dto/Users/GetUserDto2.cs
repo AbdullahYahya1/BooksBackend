@@ -1,14 +1,15 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 namespace BooksBackend.DataLayer.Dto.Users
 {
-    public class GetUserDto
+    public class GetUserDto2
     {
         public int UserID { get; set; }
         public string? Username { get; set; }
         public string Email { get; set; }
-        public int followers { get; set; } = 0;
-        public int following { get; set; } = 0;
     }
-
-
 }

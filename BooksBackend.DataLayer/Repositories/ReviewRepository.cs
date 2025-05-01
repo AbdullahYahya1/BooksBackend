@@ -25,6 +25,7 @@ namespace BooksBackend.DataLayer.Repositories
                 UserName = r.User.Username,
                 BookTitle = r.Book.Title,
                 BookCover = r.Book.CoverImageUrl,
+                bookId = r.Book.BookId,
                 ActivityType = "Rated",
                 Rating = r.Rating,
                 ActivityDate = r.CreatedAt
@@ -37,5 +38,13 @@ namespace BooksBackend.DataLayer.Repositories
         {
             return await dbContext.Reviews.Include(R => R.User).Where(B=>B.BookId==bookId).ToListAsync();
         }
+
+        public async Task<bool> ReviewCheck(int bookId, int currentUserId)
+        {
+            return await dbContext.Reviews
+                .AnyAsync(x => x.BookId == bookId && x.UserId == currentUserId);
+        }
+
+
     }
 }

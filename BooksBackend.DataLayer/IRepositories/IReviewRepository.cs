@@ -1,5 +1,6 @@
 ﻿using BooksBackend.DataLayer.Dto.Books;
 using BooksBackend.DataLayer.Entities;
+using System.Net;
 
 namespace BooksBackend.DataLayer.IRepositories
 {
@@ -7,5 +8,7 @@ namespace BooksBackend.DataLayer.IRepositories
     {
         Task<List<Review>> GetReviewsByBookIdAsync(int bookId);
         Task<List<ActivityDto>> GetRatingActivitiesByUserIdsAsync(List<int> userIds);
+
+        Task<bool> ReviewCheck(int bookId, int CurrentUserId);
     }
 }

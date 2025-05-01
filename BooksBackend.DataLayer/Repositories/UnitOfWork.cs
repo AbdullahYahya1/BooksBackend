@@ -22,6 +22,8 @@ public class UnitOfWork : IUnitOfWork
     public IGenreRepository Genres { get; }
     public IBookGenreRepository BookGenres { get; }
 
+    public IUserBookFavoritRepository UserBookFavorits { get; }
+
     public IMapper Mapper => _mapper;
 
     public UnitOfWork(
@@ -35,6 +37,7 @@ public class UnitOfWork : IUnitOfWork
         IGenreRepository genreRepository,
         IBookGenreRepository bookGenreRepository,
         IHttpContextAccessor httpContextAccessor,
+        IUserBookFavoritRepository BookFavoritsRepository,
         IMapper mapper)
     {
         _db = context ?? throw new ArgumentNullException(nameof(context));
@@ -49,6 +52,7 @@ public class UnitOfWork : IUnitOfWork
         UserReadBooks = userReadBookRepository ?? throw new ArgumentNullException(nameof(userReadBookRepository));
         Genres = genreRepository ?? throw new ArgumentNullException(nameof(genreRepository));
         BookGenres = bookGenreRepository ?? throw new ArgumentNullException(nameof(bookGenreRepository));
+        UserBookFavorits = BookFavoritsRepository ?? throw new ArgumentNullException(nameof(BookFavoritsRepository));
     }
 
     public async Task<int> SaveChangesAsync() => await _db.SaveChangesAsync();
@@ -58,6 +62,14 @@ public class UnitOfWork : IUnitOfWork
     public int? GetCurrentUserId()
     {
         var httpContext = HttpContextAccessor.HttpContext;
-        return int.Parse(httpContext?.User?.FindFirst("UserID")?.Value);
+        var userIdClaim = httpContext?.User?.FindFirst("UserID");
+
+        if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
+        {
+            return null;
+        }
+
+        return int.Parse(userIdClaim.Value);
     }
+
 }

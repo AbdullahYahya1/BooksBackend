@@ -22,11 +22,18 @@ public class UserReadBookRepository : Repository<UserReadBook>, IUserReadBookRep
             {
                 UserName = r.User.Username,
                 BookTitle = r.Book.Title,
+                bookId = r.Book.BookId,
                 BookCover = r.Book.CoverImageUrl,
                 ActivityType = "Read",
                 ActivityDate = r.ReadDate
             })
             .Take(10)
             .ToListAsync();
+    }
+
+    public Task<bool> ReadCheck(int bookId, int currentUserId)
+    {
+        return dbContext.userReadBooks
+            .AnyAsync(x => x.BookId == bookId && x.UserId == currentUserId);
     }
 }

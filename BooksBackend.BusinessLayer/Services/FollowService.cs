@@ -168,7 +168,7 @@ namespace BooksBackend.BusinessLayer.Services
             if (currentUserId == null)
             {
                 return new ResponseModel<List<ActivityDto>>
-                {
+                {   
                     IsSuccess = false,
                     Message = "Unauthorized."
                 };
@@ -189,9 +189,10 @@ namespace BooksBackend.BusinessLayer.Services
 
             var readActivities = await _unitOfWork.UserReadBooks.GetReadActivitiesByUserIdsAsync(followingUserIds);
             var ratingActivities = await _unitOfWork.Reviews.GetRatingActivitiesByUserIdsAsync(followingUserIds);
-
+            var likeActivities = await _unitOfWork.UserBookFavorits.GetFavoriteActivitiesByUserIdsAsync(followingUserIds);
             var allActivities = readActivities
                 .Concat(ratingActivities)
+                .Concat(likeActivities)
                 .OrderByDescending(a => a.ActivityDate)
                 .ToList(); 
 

@@ -7,5 +7,7 @@ namespace BooksBackend.DataLayer.IRepositories
     {
         Task<Book> GetBookById(int id);
         Task<ICollection<Book>> GetBooksAsync(BookDtoGetQuery query);
+        Task<ICollection<Book>> GetMostPopularBooksAsync();
+
     }
 }

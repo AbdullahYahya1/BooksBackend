@@ -15,5 +15,9 @@ namespace BooksBackend.DataLayer.Dto.Books
         public int ReadCount { get; set; } = 0;
         public int ReviewsCount { get; set; } = 0;
         public virtual ICollection<GetBookGenreDto> BookGenres { get; set; } = new List<GetBookGenreDto>();
+
+        public bool isFavorit { get; set; } = false;
+        public bool isRead { get; set; } = false;
+        public bool isRated { get; set; } = false;
     }
 }

@@ -57,6 +57,19 @@ namespace BooksBackend.BusinessLayer.Services
                 };
             }
             var bookDto = _unitOfWork.Mapper.Map<GetBookDtoByID>(book);
+
+            var CurrentUserId = _unitOfWork.GetCurrentUserId();
+            if (CurrentUserId != null)
+            {
+                var RatingCheck = await _unitOfWork.Reviews.ReviewCheck(bookId, (int)CurrentUserId);
+                var ReadCheck = await _unitOfWork.UserReadBooks.ReadCheck(bookId, (int)CurrentUserId);
+                var FavoritCheck = await _unitOfWork.UserBookFavorits.FavoritCheck(bookId, (int)CurrentUserId);
+                bookDto.isRated = RatingCheck;
+                bookDto.isRead = ReadCheck;
+                bookDto.isFavorit = FavoritCheck;
+            }
+
+
             return new ResponseModel<GetBookDtoByID>
             {
                 Result = bookDto,
@@ -209,6 +222,100 @@ namespace BooksBackend.BusinessLayer.Services
             };
         }
 
+        public async Task<ResponseModel> RemoveFromFavoritesAsync(int bookId)
+        {
+            var userid = _unitOfWork.GetCurrentUserId();
+            if (userid == null)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "NoAuth"
+                };
+            }
+            var userBookFavorit =await _unitOfWork.UserBookFavorits.GetByIdAsync(bookId, (int)userid);
+            if (userBookFavorit == null)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Book not found in favorites."
+                };
+            }
+            await _unitOfWork.UserBookFavorits.RemoveFavorit(bookId, (int)userid); 
+            await _unitOfWork.SaveChangesAsync();
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Message = "Book removed from favorites."
+            };
 
+        }
+
+        public async Task<ResponseModel> AddToFavoritesAsync(int bookId)
+        {
+            var userid = _unitOfWork.GetCurrentUserId();
+
+            var userBookFavoritCheck = await _unitOfWork.UserBookFavorits.GetByIdAsync(bookId, (int)userid);
+
+            if (userBookFavoritCheck != null)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Book alrady added to favorites."
+
+                };
+            }
+
+            if (userid == null)
+            {
+                return new ResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "NoAuth"
+                };
+            }
+            var userBookFavorit = new UserBookFavorit { BookId = bookId, UserID = (int)userid };
+            await _unitOfWork.UserBookFavorits.AddAsync(userBookFavorit);
+            await _unitOfWork.SaveChangesAsync();
+            return new ResponseModel
+            {
+                IsSuccess = true,
+                Message = "Book added to favorites."
+            };
+        }
+
+        public async Task<ResponseModel<List<GetBookDto>>> GetFavoriteBooksAsync()
+        {
+            var userId = _unitOfWork.GetCurrentUserId();
+            if (userId == null)
+            {
+                return new ResponseModel<List<GetBookDto>>
+                {
+                    IsSuccess = false,
+                    Message = "NoAuth"
+                };
+            }
+            var favoriteBooks =await _unitOfWork.UserBookFavorits.GetAllByUserIdAsync((int)userId);
+            var result = _unitOfWork.Mapper.Map<List<GetBookDto>>(favoriteBooks.Select(B=>B.Book).ToList());
+            return new ResponseModel<List<GetBookDto>>
+            {
+                IsSuccess = true,
+                Result = result
+            };
+        }
+
+        public async Task<ResponseModel<List<GetBookDto>>> GetMostPopularBooks()
+        {
+            var books = await _unitOfWork.Books.GetMostPopularBooksAsync();
+
+            var result = _unitOfWork.Mapper.Map<List<GetBookDto>>(books);
+            return new ResponseModel<List<GetBookDto>>
+            {
+                IsSuccess = true,
+                Result = result
+            };
+        }
     }
 }

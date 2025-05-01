@@ -14,6 +14,7 @@ public interface IUnitOfWork
     IUserReadBookRepository UserReadBooks { get; }
     IGenreRepository Genres { get; }
     IBookGenreRepository BookGenres { get; }
+    IUserBookFavoritRepository UserBookFavorits { get; }
 
     IMapper Mapper { get; }
     IHttpContextAccessor HttpContextAccessor { get; }

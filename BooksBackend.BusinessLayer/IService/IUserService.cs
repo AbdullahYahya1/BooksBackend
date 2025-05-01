@@ -6,7 +6,8 @@ namespace BooksBackend.BusinessLayer.IService
 {
     public interface IUserService
     {
-        Task<ResponseModel<GetUserDto>> GetCurrentUser();
+        Task<ResponseModel<GetUserDto>> GetCurrentUser(int? userid);
+        Task<ResponseModel<ICollection<GetUserDto2>>> GetUsersByEmailOrName(string userNameEmail);
         Task<ResponseModel<GetUserDto>> RegisterAsync(string username, string email, string password);
         Task<ResponseModel<TokenResponse>> LoginAsync(string email, string password);
         Task<ResponseModel<TokenResponse>> RefreshTokenAsync(string refreshToken);

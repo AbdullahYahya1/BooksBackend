@@ -54,5 +54,16 @@ namespace BooksBackend.DataLayer.Repositories
                 .ToListAsync();
         }
 
+        public async Task<ICollection<Book>> GetMostPopularBooksAsync()
+        {
+            var books = await dbContext.Books
+                .OrderByDescending(b => b.ReadCount + b.ReviewsCount)   
+                .Take(5)
+                .ToListAsync();
+
+            return books;
+        }
+
+
     }
 }

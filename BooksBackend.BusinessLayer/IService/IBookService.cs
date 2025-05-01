@@ -17,5 +17,10 @@ namespace BooksBackend.BusinessLayer.IService
         Task<ResponseModel> CreateGenreAsync(string name);
         Task<ResponseModel> DeleteGenreAsync(int genreId);
 
+        Task<ResponseModel> RemoveFromFavoritesAsync(int bookId);
+        Task<ResponseModel> AddToFavoritesAsync(int bookId);
+        Task<ResponseModel<List<GetBookDto>>> GetFavoriteBooksAsync();
+
+        Task<ResponseModel<List<GetBookDto>>> GetMostPopularBooks();
     }
 }

@@ -40,6 +40,21 @@ namespace BooksBackend.DataLayer.Context
                 .HasForeignKey(bg => bg.GenreId);
 
 
+            modelBuilder.Entity<UserBookFavorit>()
+                .HasKey(ub => new { ub.BookId, ub.UserID });
+
+            modelBuilder.Entity<UserBookFavorit>()
+                .HasOne(bg => bg.Book)
+                .WithMany(b => b.UserBookFavorits)
+                .HasForeignKey(bg => bg.BookId);
+
+            modelBuilder.Entity<UserBookFavorit>()
+                .HasOne(bg => bg.User)
+                .WithMany(g => g.UserBookFavorits)
+                .HasForeignKey(bg => bg.UserID);
+
+
+
         }
 
 
@@ -51,6 +66,7 @@ namespace BooksBackend.DataLayer.Context
         public DbSet<Genre> Genres { get; set; }
         public DbSet<UserList> userLists { get; set; }
         public DbSet<UserReadBook> userReadBooks { get; set; }
+        public DbSet<UserBookFavorit> UserBookFavorits { get; set; }
 
     }
 }

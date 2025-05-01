@@ -44,6 +44,8 @@ public static class DependencyInjection
         Services.AddScoped<IUserReadBookRepository, UserReadBookRepository>();
         Services.AddScoped<IGenreRepository, GenreRepository>();
         Services.AddScoped<IBookGenreRepository, BookGenreRepository>();
+        Services.AddScoped<IUserBookFavoritRepository, UserBookFavoritRepository>();
+
 
         return Services;
     }
@@ -107,7 +109,7 @@ public static class DependencyInjection
         {
             options.AddPolicy("AllowSpecificOrigin",
                 policyBuilder => policyBuilder.WithOrigins(
-                                                "http://localhost:5173"
+                                                "http://localhost:5173" , "https://finlandica.netlify.app"
                                               )
                                               .AllowAnyHeader()
                                               .AllowAnyMethod()

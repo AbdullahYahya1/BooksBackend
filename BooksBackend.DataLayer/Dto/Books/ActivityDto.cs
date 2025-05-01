@@ -6,9 +6,10 @@ namespace BooksBackend.DataLayer.Dto.Books
     {
         public string UserName { get; set; }
         public string BookTitle { get; set; }
+        public int bookId { get; set; }
         public string BookCover { get; set; }
-        public string ActivityType { get; set; } // e.g., "Read", "Rated"
-        public double? Rating { get; set; } // Only if it's a rating
+        public string ActivityType { get; set; } 
+        public double? Rating { get; set; } 
         public DateTime ActivityDate { get; set; }
     }
 

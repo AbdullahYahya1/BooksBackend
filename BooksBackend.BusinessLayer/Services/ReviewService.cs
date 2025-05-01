@@ -54,11 +54,13 @@ namespace BooksBackend.BusinessLayer.Services
             review.UserId = userId.Value;
 
             await _unitOfWork.Reviews.AddAsync(review);
+            await _unitOfWork.SaveChangesAsync(); 
 
-            book.Reviews.Add(review); 
-            RecalculateBookStats(book);
+            var updatedBook = await _unitOfWork.Books.GetBookById(dto.BookId); 
+            RecalculateBookStats(updatedBook);
 
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(); 
+
 
             var result = _unitOfWork.Mapper.Map<GetReviewDto>(review);
             return new ResponseModel<GetReviewDto> { IsSuccess = true, Result = result };
@@ -85,7 +87,7 @@ namespace BooksBackend.BusinessLayer.Services
                     Message = "Not Allowed"
                 };
             }
-            var book = await _unitOfWork.Books.GetByIdAsync(review.BookId);
+            var book = await _unitOfWork.Books.GetBookById(review.BookId);
             if (book != null)
             {
                 book.Reviews.Remove(review);

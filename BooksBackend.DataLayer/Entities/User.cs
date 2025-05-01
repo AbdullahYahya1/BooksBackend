@@ -27,5 +27,7 @@ namespace BooksBackend.DataLayer.Entities
         public virtual ICollection<UserList> UserLists { get; set; } = new List<UserList>();
 
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public virtual ICollection<UserBookFavorit> UserBookFavorits { get; set; } = new List<UserBookFavorit>();
+
     }
 }
